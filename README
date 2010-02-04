@@ -1,0 +1,68 @@
+Summary
+=======
+
+PyInputEvent provides a python interface to Linux's input subsystem
+using the `/dev/input/event*` devices, as well as providing a means
+to pass new events to the input subsystem using the `uinput` kernel
+module and `/dev/uinput`.
+
+Also included is the `keytrans` package to do translations of incoming
+events to new output events, by means of a config file and (possibly)
+python scripts.
+
+Included is a config file for the HAMA MCE Remote.
+
+How to use pyinputevent
+=======================
+
+In the `pyinputevent.py` file, the core classes are `InputEvent`
+and `SimpleDevice`.  `scancodes.py` contains all the relevant
+magic values, taken directly from `/usr/include/linux/input.h`
+
+`InputEvent` encapsulates a single `struct input_event`, and can
+`.pack` and `.unpack` values.  It can be instantiated with either
+a byte-buffer as the constructor argument or for a hand-crafted
+event with `InputEvent.new(etype, ecode, evalue)`
+
+SimpleDevice can be instantiated with the constructor arguments
+`device_name` and `device_path`. For example:
+    
+    sd = SimpleDevice("mouse", "/dev/input/event6")
+    sd.read() # will perform a non-blocking read and return
+              # an input_event or None
+
+SimpleDevice implemented fileno(), which means that you can use
+the `select` module easily to determine when data has arrived.
+
+TODO: Document `Controller`, `HIDevice`, and `main()`
+
+How to use uinput
+=================
+
+TODO: For the moment see hamacontrol.py
+
+How to use keytrans
+===================
+
+TODO: For the moment see hamacontrol.py
+
+How to use hamacontrol
+======================
+
+`hamacontrol.py` combined pyinputevent, uinput, and keytrans together
+with a configuration file (`keymap.txt`) to provide support for
+the HAMA MCE Remote.  If the USB IR receiver is plugged in, running
+`python hamacontrol.py` will automatically detect the devices,
+listen for events on them, translate them based on the config file,
+then pass the translated events to a newly created `uinput` device.
+
+You may have to run `modprobe uinput` before running this script,
+and you either have to change the permissions on these devices, or
+run this script as root.
+
+You should place `hama.fdi` in /etc/hal/fdi/preprobe/ to stop the
+device being automatically registered as an active input device.
+
+License
+=======
+Released under the MIT license.  See the `LICENSE` file.

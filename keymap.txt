@@ -1,0 +1,181 @@
+#
+# Configuration file for HAMA MCE Remote Control
+#
+# Map a key (or key sequence, if using "wait") to an action.
+# Format: KEY_SEQUENCE = ACTIONS
+#
+# KEY_SEQUENCE is one or more space separated KEY_COMBINATIONs.
+# KEY_COMBINATIONs have the format KEY_NAME-down or KEY_NAME-up, and may
+# be prefixed with Ctrl-, Alt-, or Shift-. eg. KEY_1-down
+#
+# Actions are semicolon separated (simple python split). They may be
+# one of:
+#
+#  none - do nothing, ignore key sequence
+#  wait - wait for the next keystroke and join into a KEY_SEQUENCE
+#  clear - clear the list of previously "wait"'d key sequences.
+#  send KEY1 KEY2 - send key response sequence (see below)
+#  set VARNAME value - evaluate (value) and put the result in VARNAME
+#  if EXPR - if EXPR (python expression) is true, execute following statements
+#  else - toggle execution of following statements (best used with "if")
+#  exec STMT - execute a python statement
+#  call MODULE:FUNCTION:argument - import a python module and call the
+#                                  specified function with the arguments:
+#    function(list_of_keyevents, dictionary_of_variables, argument_string)
+#    The function should return a list of InputEvent's to send.
+
+
+# (e) button
+KEY_HOMEPAGE-down = send KEY_HOMEPAGE-down
+KEY_HOMEPAGE-up = send KEY_HOMEPAGE-up
+# power button
+KEY_SLEEP-down = send KEY_TAB-down
+KEY_SLEEP-up = send KEY_TAB-up
+
+# yellow button
+Ctrl-Shift-KEY_T-down = send KEY_T
+KEY_T-up = none
+# blue button
+Ctrl-KEY_M-down = send KEY_M
+KEY_M-up = none
+# green button
+Ctrl-KEY_I-down = send KEY_P
+KEY_I-up = none
+# red button - why J? don't know
+Ctrl-KEY_E-down = send KEY_MENU
+KEY_E-up = none
+
+# below yellow button
+Ctrl-KEY_O-down = send KEY_F1
+KEY_O-up = none
+# below blue button
+Ctrl-KEY_G-down = send KEY_F2
+KEY_G-up = none
+# below green button
+Ctrl-KEY_T-down = send KEY_F3
+### KEY_T-up is defined above for the yellow button
+# below red button
+Ctrl-Shift-KEY_M-down = send KEY_F4
+### KEY_M-up is defined above for the blue button
+
+# top ffd back
+Ctrl-Shift-KEY_B-down = send KEY_LEFT
+KEY_B-up = none
+# top ffd forward
+Ctrl-Shift-KEY_F-down = send KEY_RIGHT
+KEY_F-up = none
+# play/pause
+KEY_PLAYPAUSE-down = send KEY_PLAYPAUSE-down
+KEY_PLAYPAUSE-up = send KEY_PLAYPAUSE-up
+# previous (bottom ffd back)
+KEY_PREVIOUSSONG-down = send KEY_PREVIOUSSONG-down
+KEY_PREVIOUSSONG-up = send KEY_PREVIOUSSONG-up
+# next (bottom ffd forward)
+KEY_NEXTSONG-down = send KEY_NEXTSONG-down
+KEY_NEXTSONG-up = send KEY_NEXTSONG-up
+# stop
+KEY_STOPCD-down = send KEY_STOPCD-down
+KEY_STOPCD-up = send KEY_STOPCD-up
+# pause is the same as play above
+# record button (make it an info button by sending 'i')
+Ctrl-KEY_R-down = send KEY_I
+KEY_R-up = none
+
+# back button
+KEY_BACKSPACE-down = send KEY_BACKSPACE-down
+KEY_BACKSPACE-up = send KEY_BACKSPACE-up
+
+# up arrow
+KEY_UP-down = send KEY_UP-down
+KEY_UP-up = send KEY_UP-up
+# left arrow
+KEY_LEFT-down = send KEY_LEFT-down
+KEY_LEFT-up = send KEY_LEFT-up
+# right
+KEY_RIGHT-down = send KEY_RIGHT-down
+KEY_RIGHT-up = send KEY_RIGHT-up
+# down
+KEY_DOWN-down = send KEY_DOWN-down
+KEY_DOWN-up = send KEY_DOWN-up
+# OK
+KEY_ENTER-down = wait
+KEY_ENTER-down KEY_ENTER-up = send KEY_ENTER; clear
+# left mouse button
+BTN_MOUSE-down = send BTN_MOUSE-down
+BTN_MOUSE-up = send BTN_MOUSE-up
+# right mouse button (doubles as an info button)
+BTN_RIGHT-down = set rightclick time.time()
+BTN_RIGHT-up = if (time.time()-rightclick) > 0.3; send KEY_I; else; send BTN_RIGHT
+
+# volume up
+KEY_VOLUMEUP-down = send KEY_VOLUMEUP-down
+KEY_VOLUMEUP-up = send KEY_VOLUMEUP-up
+# volume down
+KEY_VOLUMEDOWN-down = send KEY_VOLUMEDOWN-down
+KEY_VOLUMEDOWN-up = send KEY_VOLUMEDOWN-up
+# mute
+KEY_MUTE-down = send KEY_MUTE-down
+KEY_MUTE-up = send KEY_MUTE-up
+# "Start" button - send KPENTER
+Alt-KEY_ENTER-down = wait
+Alt-KEY_ENTER-down KEY_ENTER-up = send KEY_KPENTER; clear
+Alt-KEY_ENTER-down KEY_LEFTMETA-up = none
+KEY_LEFTMETA-down = none
+KEY_LEFTMETA-up = none
+# channel+
+KEY_PAGEUP-down = send KEY_PAGEUP-down
+KEY_PAGEUP-up = send KEY_PAGEUP-up
+# channel-
+KEY_PAGEDOWN-down = send KEY_PAGEDOWN-down
+KEY_PAGEDOWN-up = send KEY_PAGEDOWN-up
+
+# Handle the numeric keypad - ignore the numlocks
+KEY_NUMLOCK-down = none
+KEY_NUMLOCK-up = none
+# 1
+KEY_KP1-down = send KEY_1
+KEY_KP1-up = none
+# 2
+KEY_KP2-down = send KEY_2
+KEY_KP2-up = none
+# 3
+KEY_KP3-down = send KEY_3
+KEY_KP3-up = none
+# 4
+KEY_KP4-down = send KEY_4
+KEY_KP4-up = none
+# 5
+KEY_KP5-down = send KEY_5
+KEY_KP5-up = none
+# 6
+KEY_KP6-down = send KEY_6
+KEY_KP6-up = none
+# 7
+KEY_KP7-down = send KEY_7
+KEY_KP7-up = none
+# 8
+KEY_KP8-down = send KEY_8
+KEY_KP8-up = none
+# 9
+KEY_KP9-down = send KEY_9
+KEY_KP9-up = none
+# 0
+KEY_KP0-down = send KEY_0
+KEY_KP0-up = none
+
+# asterisk (left of 0)
+ABS_MT_TOOL_TYPE-down = send KEY_KPASTERISK-down
+ABS_MT_TOOL_TYPE-up = send KEY_KPASTERISK-up
+
+# hash key
+Alt-KEY_KP3-down = wait
+Alt-KEY_KP3-down Alt-KEY_KP3-up = none; clear
+Alt-KEY_KP5-down = wait
+Alt-KEY_KP5-down KEY_KP5-up = send KEY_DELETE; clear
+
+# close button
+Alt-KEY_F4-down = wait
+Alt-KEY_F4-down KEY_F4-up = send KEY_ESC; clear
+# clear button
+KEY_ESC-down = send KEY_TAB
+KEY_ESC-up = none
