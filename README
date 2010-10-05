@@ -60,8 +60,23 @@ You may have to run `modprobe uinput` before running this script,
 and you either have to change the permissions on these devices, or
 run this script as root.
 
-You should place `hama.fdi` in /etc/hal/fdi/preprobe/ to stop the
-device being automatically registered as an active input device.
+X11 Device Detection
+====================
+The original device should be ignored by X when you start hamacontrol.py
+because we now try to open it with the exclusive flag, which should stop X
+using it without any HAL or Xorg.conf hacks required.  If you still have
+problems, try including the following in your Xorg.conf file (with thanks
+to Graeme Blackman for this tidbit):
+
+::
+
+   Section "InputClass"
+      Identifier "Hama Control"
+      MatchProduct "9881"
+      MatchVendor "05a4"
+      Option "Ignore" "yes"
+   EndSection 
+
 
 License
 =======

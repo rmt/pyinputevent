@@ -8,6 +8,7 @@ import scancodes as S
 import logging
 import getopt
 import sys
+import fcntl
 
 def detect_hama_mce():
     fd = file("/proc/bus/input/devices")
@@ -105,6 +106,7 @@ def main(devs):
     for devpath in devs:
         dev = ForwardDevice(udev, devpath, devpath)
         poll.register(dev, select.POLLIN | select.POLLPRI)
+	fcntl.ioctl(dev.fileno(), 0x40044590, 1)
         fds[dev.fileno()] = dev
     while True:
         for x,e in poll.poll():
@@ -113,11 +115,11 @@ def main(devs):
 
 if __name__ == '__main__':
     logger = logging.getLogger()
-    for arg,rest in getopt.getopt(sys.argv, "vq")[0]:
+    for arg in getopt.getopt(sys.argv, "vq")[1]:
         if arg == "-v":
-            logger.setLogLevel(logger.getEffectiveLevel()-10)
+            logger.setLevel(logger.getEffectiveLevel()-10)
         elif arg == "-q":
-            logger.setLogLevel(logger.getEffectiveLevel()+10)
+            logger.setLevel(logger.getEffectiveLevel()+10)
     mousedev, kbddev = detect_hama_mce()
     if not mousedev or not kbddev:
         logging.error("HAMA MCE Remote not detected")
@@ -126,4 +128,5 @@ if __name__ == '__main__':
         ("/dev/input/%s" % mousedev),
         ("/dev/input/%s" % kbddev),
     ]
+    logging.info("Listening on %r" % devs)
     main(devs)
